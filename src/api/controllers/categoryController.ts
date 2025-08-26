@@ -97,7 +97,7 @@ const deleteCategory = async (
       return;
     }
     res.json({
-      message: 'Category updated',
+      message: 'Category deleted',
       data: deletedCategory,
     });
   } catch (error) {
