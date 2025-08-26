@@ -56,4 +56,30 @@ const getCategory = async (
   }
 };
 
-export {postCategory, getCategories, getCategory};
+const putCategory = async (
+  req: Request<{id: string}, {}, Category>,
+  res: Response<DBMessageResponse>,
+  next: NextFunction,
+) => {
+  try {
+    const updatedCategory = await categoryModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {new: true},
+    );
+
+    if (!updatedCategory) {
+      next(new CustomError('Category not found', 404));
+      return;
+    }
+
+    res.json({
+      message: 'Category updated',
+      data: updatedCategory,
+    });
+  } catch (error) {
+    next(new CustomError((error as Error).message, 500));
+  }
+};
+
+export {postCategory, getCategories, getCategory, putCategory};
