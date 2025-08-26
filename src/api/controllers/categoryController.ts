@@ -82,4 +82,27 @@ const putCategory = async (
   }
 };
 
-export {postCategory, getCategories, getCategory, putCategory};
+const deleteCategory = async (
+  req: Request<{id: string}>,
+  res: Response<DBMessageResponse>,
+  next: NextFunction,
+) => {
+  try {
+    const deletedCategory = await categoryModel.findByIdAndDelete(
+      req.params.id,
+    );
+
+    if (!deletedCategory) {
+      next(new CustomError('Category not found', 404));
+      return;
+    }
+    res.json({
+      message: 'Category updated',
+      data: deletedCategory,
+    });
+  } catch (error) {
+    next(new CustomError((error as Error).message, 500));
+  }
+};
+
+export {postCategory, getCategories, getCategory, putCategory, deleteCategory};
