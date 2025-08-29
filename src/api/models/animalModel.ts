@@ -64,6 +64,7 @@ animalSchema.statics.findBySpecies = function (species_name: string) {
       $project: {
         __v: 0,
         'species.__v': 0,
+        'species.category.__v': 0,
       },
     },
   ]);
