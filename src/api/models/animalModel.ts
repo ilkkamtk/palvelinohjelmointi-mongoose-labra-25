@@ -38,11 +38,22 @@ animalSchema.statics.findBySpecies = function (species_name: string) {
         from: 'species',
         localField: 'species',
         foreignField: '_id',
-        as: 'species_info',
+        as: 'species',
       },
     },
     {
-      $unwind: '$species_info',
+      $unwind: '$species',
+    },
+    {
+      $lookup: {
+        from: 'categories',
+        localField: 'species.category',
+        foreignField: '_id',
+        as: 'species.category',
+      },
+    },
+    {
+      $unwind: '$species.category',
     },
     {
       $match: {
