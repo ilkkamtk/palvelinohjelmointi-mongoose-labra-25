@@ -41,9 +41,7 @@ animalSchema.statics.findBySpecies = function (species_name: string) {
         as: 'species',
       },
     },
-    {
-      $unwind: '$species',
-    },
+    {$unwind: '$species'},
     {
       $lookup: {
         from: 'categories',
@@ -52,18 +50,17 @@ animalSchema.statics.findBySpecies = function (species_name: string) {
         as: 'species.category',
       },
     },
-    {
-      $unwind: '$species.category',
-    },
+    {$unwind: '$species.category'},
     {
       $match: {
-        'species_info.species_name': species_name,
+        'species.species_name': species_name,
       },
     },
     {
       $project: {
         __v: 0,
-        'species_info.__v': 0,
+        'species.__v': 0,
+        'species.category.__v': 0,
       },
     },
   ]);
