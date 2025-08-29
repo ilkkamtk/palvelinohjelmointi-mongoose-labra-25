@@ -2,7 +2,7 @@ import {Polygon} from 'geojson';
 import {MessageResponse} from '../src/types/Messages';
 import {Express} from 'express';
 import request from 'supertest';
-import {TestSpecies} from './testTypes';
+import {PostSpecies, TestSpecies} from './testTypes';
 
 // TODO: Add tests for the following:
 // 1. Get all species
@@ -60,25 +60,25 @@ const getSpeciesById = (app: Express, id: string): Promise<TestSpecies> => {
 
 const postSpecies = (
   app: Express,
-  species_name: string,
-  category: string,
-  location: {type: string; coordinates: number[]},
+  speciesData: PostSpecies,
 ): Promise<DBMessageResponse> => {
   return new Promise((resolve, reject) => {
+    console.log('lolz', speciesData);
     request(app)
       .post('/api/v1/species')
-      .send({species_name, category, location, image: 'imageURL'})
+      .send(speciesData)
       .expect(201, (err, response) => {
         if (err) {
           reject(err);
         } else {
+          console.log('kakka', response.body);
           const message: string = response.body.message;
           const data = response.body.data as TestSpecies;
           expect(message).toBe('Species created');
           expect(data._id).toBeDefined();
-          expect(data.species_name).toBe(species_name);
-          expect(data.category).toBe(category);
-          expect(data.location).toStrictEqual(location);
+          expect(data.species_name).toBe(speciesData.species_name);
+          expect(data.category).toBe(speciesData.category);
+          expect(data.location).toStrictEqual(speciesData.location);
           resolve(response.body);
         }
       });

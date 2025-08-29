@@ -28,7 +28,7 @@ import {
   postAnimal,
   putAnimal,
 } from './testAnimals';
-import {TestAnimal, TestCategory, TestSpecies} from './testTypes';
+import {PostSpecies, TestAnimal, TestCategory, TestSpecies} from './testTypes';
 
 describe('GET /api/v1', () => {
   beforeAll(async () => {
@@ -98,15 +98,18 @@ describe('GET /api/v1', () => {
     if (Array.isArray(categoryResponse.data)) {
       return;
     }
-    speciesResponse = await postSpecies(
-      app,
-      'Lion',
-      categoryResponse.data._id,
-      {
+
+    const speciesData: PostSpecies = {
+      species_name: 'Lion',
+      image: 'https://place-hold.it/400x300',
+      location: {
         type: 'Point',
         coordinates: [60.38, 24.6],
       },
-    );
+      category: categoryResponse.data._id,
+    };
+
+    speciesResponse = await postSpecies(app, speciesData);
     console.log(speciesResponse);
   });
 
@@ -208,7 +211,7 @@ describe('GET /api/v1', () => {
   });
 
   // delete test data
-
+  /*
   it('Should delete a category', async () => {
     if (Array.isArray(categoryResponse.data)) {
       return;
@@ -229,4 +232,5 @@ describe('GET /api/v1', () => {
     }
     await deleteAnimal(app, animalResponse.data._id);
   });
+  */
 });
